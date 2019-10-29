@@ -42,7 +42,9 @@ final class ProcessFactory
     public function createSubsplit(
         ?string $theMostRecentTag,
         string $directory,
-        string $remoteRepository
+        string $directory,
+        string $remoteRepository,
+        string $branch = null
     ): Process {
         $this->repositoryGuard->ensureIsRepository($remoteRepository);
 
@@ -50,11 +52,11 @@ final class ProcessFactory
             realpath(self::SUBSPLIT_BASH_FILE),
             sprintf('--from-directory=%s', $directory),
             sprintf('--to-repository=%s', $remoteRepository),
-            '--branch=master',
             $theMostRecentTag ? sprintf('--tag=%s', $theMostRecentTag) : '',
+            $branch ? sprintf('--branch=%s', $branch) : '',
             sprintf('--repository=%s', $this->repository),
         ];
-
+        
         return $this->createProcessFromCommandLine($commandLine, $directory);
     }
 
